@@ -47,3 +47,24 @@ insert a (Node n left a' right) =
 height :: Tree a -> Integer
 height Leaf = 0
 height (Node n _ _ _) = n
+
+
+{-Exercise 3-}
+
+
+myFoldl :: (a -> b -> a) -> a -> [b] -> a
+myFoldl f base xs = foldr (flip f) base (reverse xs)
+
+
+{-Exercise 4-}
+tupleProduct :: (Integer, Integer) -> Integer
+tupleProduct t =  fst t + snd t + 2 * fst t * snd t
+
+tuples :: Integer -> [(Integer, Integer)]
+tuples n =
+    let m = n `div` 2
+    in [(y, x) | x <- [1..m], y <- [1..x]]
+
+sieveSundaram :: Integer -> [Integer]
+sieveSundaram n = filter (<=n) (map tupleProduct (tuples n))
+    {-let reds =  cartProd [1..n] [1..n]-}
