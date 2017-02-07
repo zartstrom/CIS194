@@ -36,9 +36,8 @@ foldTree = foldr (\a b -> insert a b) Leaf
 insert :: a -> Tree a -> Tree a
 insert a Leaf = Node 0 Leaf a Leaf
 insert a (Node n left a' right) =
-    let insertLeft = height left < height right
-        insertTree = if insertLeft then left else right
-        updatedTree = insert a insertTree
+    let insertLeft = elements left < elements right
+        updatedTree = if insertLeft then insert a left else insert a right
         newHeight = max n (height updatedTree + 1)
     in if insertLeft
         then Node newHeight updatedTree a' right
@@ -48,8 +47,18 @@ height :: Tree a -> Integer
 height Leaf = 0
 height (Node n _ _ _) = n
 
+elements :: Tree a -> Integer
+elements Leaf = 0
+elements (Node n left _ right) = elements left + 1 + elements right
+
 
 {-Exercise 3-}
+
+xor :: [Bool] -> Bool
+xor = foldr (\x y -> if(x) then not y else y) False
+
+map' :: (a -> b) -> [a] -> [b]
+map' f = foldr (\a b -> f(a):b) []
 
 
 myFoldl :: (a -> b -> a) -> a -> [b] -> a
