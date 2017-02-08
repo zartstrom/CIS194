@@ -74,10 +74,10 @@ tupleProduct t =  fst t + snd t + 2 * fst t * snd t
 tuples :: Integer -> [(Integer, Integer)]
 tuples n = [(y, x) | x <- [1..n], y <- [1..x]]
 
-needed :: Integer -> [Integer]
-needed n =
+candidates :: Integer -> [Integer]
+candidates n =
     let notNeeded = filter (<=n) (map tupleProduct (tuples n))
     in [1..n] \\ notNeeded
 
 sieveSundaram :: Integer -> [Integer]
-sieveSundaram = map (+1) . map (*2) . needed
+sieveSundaram = map (+1) . map (*2) . candidates
