@@ -1,5 +1,7 @@
 
 
+import Data.List
+
 {-Exercise 1-}
 
 {-no style-}
@@ -31,13 +33,13 @@ jump n = if (even n) then (n `div` 2) else if (n==1) then 0 else (3 * n + 1)
 data Tree a = Leaf | Node Integer (Tree a) a (Tree a) deriving (Show, Eq)
 
 foldTree :: [a] -> Tree a
-foldTree = foldr (\a b -> insert a b) Leaf
+foldTree = foldr (\a b -> myInsert a b) Leaf
 
-insert :: a -> Tree a -> Tree a
-insert a Leaf = Node 0 Leaf a Leaf
-insert a (Node n left a' right) =
+myInsert :: a -> Tree a -> Tree a
+myInsert a Leaf = Node 0 Leaf a Leaf
+myInsert a (Node n left a' right) =
     let insertLeft = elements left < elements right
-        updatedTree = if insertLeft then insert a left else insert a right
+        updatedTree = if insertLeft then myInsert a left else myInsert a right
         newHeight = max n (height updatedTree + 1)
     in if insertLeft
         then Node newHeight updatedTree a' right
@@ -70,10 +72,12 @@ tupleProduct :: (Integer, Integer) -> Integer
 tupleProduct t =  fst t + snd t + 2 * fst t * snd t
 
 tuples :: Integer -> [(Integer, Integer)]
-tuples n =
-    let m = n `div` 2
-    in [(y, x) | x <- [1..m], y <- [1..x]]
+tuples n = [(y, x) | x <- [1..n], y <- [1..x]]
+
+needed :: Integer -> [Integer]
+needed n =
+    let notNeeded = filter (<=n) (map tupleProduct (tuples n))
+    in [1..n] \\ notNeeded
 
 sieveSundaram :: Integer -> [Integer]
-sieveSundaram n = filter (<=n) (map tupleProduct (tuples n))
-    {-let reds =  cartProd [1..n] [1..n]-}
+sieveSundaram = map (+1) . map (*2) . needed
