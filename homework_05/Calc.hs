@@ -1,3 +1,5 @@
+{-# LANGUAGE TypeSynonymInstances #-}
+
 module Calc where
 
 
@@ -38,7 +40,7 @@ instance Expr Integer where
     mul = (*)
 
 instance Expr Bool where
-    lit n 
+    lit n
         | n <= 0 = False
         | otherwise = True
     add = (||)
