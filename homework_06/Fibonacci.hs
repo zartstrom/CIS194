@@ -1,3 +1,6 @@
+{-# LANGUAGE FlexibleInstances #-}
+{-# OPTIONS_GHC -fno-warn-missing-methods #-}
+
 module Fibonacci where
 
 
@@ -36,7 +39,7 @@ streamRepeat :: a -> Stream a
 streamRepeat x = Cons x (streamRepeat x)
 
 streamMap :: (a -> b) -> Stream a -> Stream b
-streamMap f (Cons x sx) = Cons (f x) (streamMap f sx)  
+streamMap f (Cons x sx) = Cons (f x) (streamMap f sx)
 
 streamFromSeed :: (a -> a) -> a -> Stream a
 streamFromSeed f x = Cons x (streamFromSeed f (f x))
@@ -54,3 +57,27 @@ interleaveRuler n = interleaveStreams (streamRepeat n) (interleaveRuler (n + 1))
 
 ruler :: Stream Integer
 ruler = interleaveRuler 0
+
+
+{-Exercise 6-}
+x :: Stream Integer
+x = Cons 0 (Cons 1 (streamRepeat 0))
+
+tailStream :: Stream Integer -> Stream Integer
+tailStream (Cons _ xs) = xs
+
+instance Num (Stream Integer) where
+    fromInteger n = Cons n (streamRepeat 0)
+    negate (Cons x xs) = Cons (-1 * x) (negate xs)
+    (+) (Cons x xs) (Cons y ys) = Cons (x + y) ((+) xs ys)
+    (*) (Cons x xs) (Cons y ys) = Cons (x * y) ((streamMap (*x) ys) + ((*) xs (Cons y ys)))
+
+
+q :: Stream Integer -> Stream Integer -> Stream Integer
+q (Cons x xs) (Cons y ys) = Cons (x `div` y) ( streamMap (`div` y) (xs - (q (Cons x xs) (Cons y ys)) * ys) )
+
+instance Fractional (Stream Integer) where
+    (/) xs ys = q xs ys
+
+fibs3 :: Stream Integer
+fibs3 = x / (1 - x - x^2)
