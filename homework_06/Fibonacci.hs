@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# OPTIONS_GHC -fno-warn-missing-methods #-}
 
 module Fibonacci where
@@ -81,3 +82,22 @@ instance Fractional (Stream Integer) where
 
 fibs3 :: Stream Integer
 fibs3 = x / (1 - x - x^2)
+
+
+{-Exercise 7-}
+data Matrix a = Matrix a a a a deriving Show
+
+instance Num a => Num (Matrix a) where
+    fromInteger n = Matrix (fromInteger n) (fromInteger n) (fromInteger n) (fromInteger n)
+    (*) (Matrix a b c d) (Matrix e f g h) = Matrix (a*e + b*g) (a*f + b*h) (c*e + d*g) (c*f + d*h)
+
+p :: Matrix a -> a
+p (Matrix _ _ x _) = x
+
+m :: Matrix Integer
+m = Matrix 1 1 1 0
+
+fib4 :: Integer -> Integer
+fib4 n
+    | n == 0 = 0
+    | otherwise = p (m^n)
