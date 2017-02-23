@@ -50,7 +50,3 @@ data GuestList = GL [Employee] Fun
 
 instance Ord GuestList where
   compare (GL _ f1) (GL _ f2) = compare f1 f2
-
-
-glCons :: Employee -> GuestList -> GuestList
-glCons e (GL es fun) = GL (e:es) ((empFun e) + fun)
