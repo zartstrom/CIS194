@@ -69,4 +69,22 @@ instance Functor Parser where
             runP xs = fmap (updateFirst f) (runParser p xs)
 
 {-exercise 2-}
+instance Applicative Parser where
+    pure a = Parser f
+        where
+            f xs = Just (a, xs)
+    (<*>) pf pa = Parser runP
+        where
+            runP xs = case (runParser pf xs) of
+                Nothing -> Nothing
+                Just (fun, ys) -> runParser (fmap fun pa) ys
 
+{-exercise 3-}
+aParser :: Parser (Char -> (Char, Char))
+aParser = fmap (\x -> (\y -> (x, y))) (char 'a')
+
+bParser :: Parser Char
+bParser = char 'b'
+
+abParser :: Parser (Char, Char)
+abParser = (<*>) aParser bParser
