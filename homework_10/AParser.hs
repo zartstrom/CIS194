@@ -57,3 +57,16 @@ posInt = Parser f
 ------------------------------------------------------------
 -- Your code goes below here
 ------------------------------------------------------------
+
+{-exercise 1-}
+updateFirst :: (a -> b) -> (a, c) -> (b, c)
+updateFirst f ac = (f (fst ac), snd ac)
+
+instance Functor Parser where
+    {-fmap :: (a -> b) -> Parser a -> Parser b-}
+    fmap f p = Parser runP
+        where
+            runP xs = fmap (updateFirst f) (runParser p xs)
+
+{-exercise 2-}
+
