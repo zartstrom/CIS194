@@ -81,10 +81,25 @@ instance Applicative Parser where
 
 {-exercise 3-}
 aParser :: Parser (Char -> (Char, Char))
-aParser = fmap (\x -> (\y -> (x, y))) (char 'a')
+aParser = fmap (,) (char 'a')
 
 bParser :: Parser Char
 bParser = char 'b'
 
 abParser :: Parser (Char, Char)
 abParser = (<*>) aParser bParser
+
+abParser_ :: Parser (())
+abParser_ = fmap (\x -> ()) abParser
+
+intSpace :: Parser Integer
+intSpace = const <$> posInt <*> (char ' ')
+
+intPair :: Parser (Integer, Integer)
+intPair = (fmap (,) intSpace) <*> posInt
+
+{-exercise 4-}
+instance Alternative Parser where
+    empty = Parser runP
+        where runP xs = Nothing
+    (<|>) fa fa' = f a
